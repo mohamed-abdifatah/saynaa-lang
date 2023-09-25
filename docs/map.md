@@ -3,13 +3,13 @@
 Maps are associative containers implemented as pairs each of which maps a key to a value. You can create a map by placing a series of comma-separated entries inside brace. Each entry is a key and a value separated by a colon:
 
 ```ruby
-  // create a new map with 4 entries
+  # create a new map with 4 entries
   d = {"Banana":10, "Apple":20, "Lime":30, "Orange":40};
 
-  // map has a length attribute
-  n = d.length;  // n is 4
+  # map has a length attribute
+  n = d.length;  # n is 4
 
-  // create an empty map
+  # create an empty map
   map = {};
 ```
 
@@ -18,8 +18,8 @@ You can access an element from a list by calling the subscript operator [] on it
       
 ```ruby
   names = {"Banana":10, "Apple":20, "Lime":30, "Orange":40};
-  names["Banana"];      // 10
-  names["Apple"];       // 20
+  names["Banana"];      # 10
+  names["Apple"];       # 20
 ```
 
 ### Iterating items
@@ -35,13 +35,13 @@ The subscript operator works well for finding values when you know the key youâ€
 An item can be added to a map by simply setting a key/value:
 ```ruby
   fruits = {"Banana":10, "Apple":20, "Lime":30, "Orange":40};
-  fruits["Grape"] = 50;  // fruits now contains the "Grape" key with value 50
+  fruits["Grape"] = 50;  # fruits now contains the "Grape" key with value 50
 ```
 
 ### Retrieving keys
 The keys method has been added to the map class as a conveniente way to get access to all keys:
 ```ruby
   fruits = {"Banana":10, "Apple":20, "Lime":30, "Orange":40};
-  fruits.keys; // ["Banana", "Orange", "Lime", "Apple"]
+  fruits.keys; # ["Banana", "Orange", "Lime", "Apple"]
 ```
 

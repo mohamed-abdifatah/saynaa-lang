@@ -27,14 +27,10 @@ A closure can be disassembled in order to reveal its bytecode:
     print(lang.disas(sum));
   end
 
-  // Output:
-  // Instruction Dump of function sum @main
-  //   2:     0  PUSH_LOCAL_0          (param:0)
-  //          1  PUSH_LOCAL_1          (param:1)
-  //          2  ADD
-  //          4  RETURN
-  //   3:     5  POP
-  //          6  POP
-  //          7  RETURN
-  //          8  END
+  # Output:
+  # Instruction Dump of function sum @main
+  #   2:     0  PUSH_LOCAL_0          (param:0)
+  #          1  PUSH_LOCAL_1          (param:1)
+  #          2  ADD
+  #          4  RETURN
 ```
