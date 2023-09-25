@@ -2361,7 +2361,6 @@ Var varGetAttrib(VM* vm, Var on, String* attrib, bool skipGetter) {
         case CHECK_HASH("length", 0x83d03615):
           return VAR_NUM(rangeLength(vm, range));
 
-
         // We can't use 'start', 'end' since 'end' is a
         // keyword. Also we can't use 'from', 'to' since 'from' is a keyword
         // too. So, we're using 'first' and 'last' to access the range limits.
