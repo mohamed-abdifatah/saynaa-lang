@@ -1,0 +1,15 @@
+
+a = 1..100
+assert(a.length==99) # 1..99 (100 not include)
+
+b = Range(1, 100)
+assert(a==b);
+assert(b.first == 1); assert(b.last == 100)
+c = b.as_list
+assert(c[-1] == 99)
+
+list = []
+for i in 0..10 do
+  list.append(i+1) # 0 .. 9 added +1 = 1..10
+end
+assert(list == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])

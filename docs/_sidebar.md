@@ -9,6 +9,8 @@
   * [Bool](bool.md)
   * [List](list.md)
   * [Map](map.md)
+  * [Range](range.md)
   * [Closure](closure.md)
   * [Function](function.md)
   * [Class](class.md)
+  * [Loops](loop.md)

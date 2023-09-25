@@ -5,8 +5,8 @@ Lists (or arrays) are simple sequence of objects, their size is dynamic and thei
 ```ruby
   r = [1, 2, "Hello", 3.1415, true];
 
-  // list has a length attribute
-  n = r.length;  // n is 5
+  # list has a length attribute
+  n = r.length;  # n is 5
 ```
 
 ### Accessing items
@@ -14,15 +14,15 @@ You can access an element from a list by calling the subscript operator [] on it
       
 ```ruby
   fruits = ["Banana", "Apple", "Lime", "Orange", "Grape", "Mango"];
-  fruits[0];  // "Banana"
-  fruits[2];  // "Lime"
+  fruits[0];  # "Banana"
+  fruits[2];  # "Lime"
 ```
 
 Negative indices count backwards from the end:
 ```ruby
   names = ["Banana", "Apple", "Lime", "Orange", "Grape", "Mango"];
-  names[-1];  // "Mango"
-  names[-2];  // "Grape"
+  names[-1];  # "Mango"
+  names[-2];  # "Grape"
 ```
 
 ### Iterating items
@@ -38,15 +38,15 @@ The subscript operator works well for finding values when you know the key youâ€
 The List class implements the pop methods as a convenient way to treat a list as a stack:
 ```ruby
   list = [10,20,30,40,50];
-  v1 = list.pop();  // pop 50
-  v2 = list.pop();  // pop 40
+  v1 = list.pop();  # pop 50
+  v2 = list.pop();  # pop 40
 ```
 
 ### List Join
 The List class implements the join method as a convenient way to interpret a list as a string:
 ```ruby
   list = [1,2,3,4,5];
-  list.join(" + "); // Becomes: "1 + 2 + 3 + 4 + 5"
+  list.join(" + "); # Becomes: "1 + 2 + 3 + 4 + 5"
 ```
 
 ### List Sort
@@ -55,10 +55,10 @@ The List class implements the sort method as a convenient way to sort its items.
 ```ruby
   fruits = ["Banana", "Orange", "Apple", "Mango"];
   fruits.sort();
-  // fruits is now [Apple,Banana,Mango,Orange]
+  # fruits is now [Apple,Banana,Mango,Orange]
 
   numbers = [10, 3.14, 82, 1, 7];
   numbers.sort();
-  // numbers is now [1,3.14,7,10,82]
+  # numbers is now [1,3.14,7,10,82]
 
 ```

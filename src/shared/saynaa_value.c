@@ -590,9 +590,32 @@ List* rangeAsList(VM* vm, Range* self) {
     vmPopTempRef(vm); // list.
 
     return list;
+  }else{
+    List* list = newList(vm, (uint32_t)(self->from - self->to));
+    vmPushTempRef(vm, &list->_super); // list.
+    for (double i = self->from; i > self->to; i--) {
+      VarBufferWrite(&list->elements, vm, VAR_NUM(i));
+    }
+    vmPopTempRef(vm); // list.
+
+    return list;
+  }
+}
+
+double rangeLength(VM* vm, Range* self) {
+  double length = 0;
+
+  if (self->from < self->to) {
+    for (double i = self->from; i < self->to; i++) {
+      length++;
+    }
+  }else{
+    for (double i = self->from; i > self->to; i--) {
+      length++;
+    }
   }
 
-  return newList(vm, 0);
+  return length;
 }
 
 String* stringLower(VM* vm, String* self) {
