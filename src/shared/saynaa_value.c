@@ -590,9 +590,16 @@ List* rangeAsList(VM* vm, Range* self) {
     vmPopTempRef(vm); // list.
 
     return list;
-  }
+  }else{
+    List* list = newList(vm, (uint32_t)(self->from - self->to));
+    vmPushTempRef(vm, &list->_super); // list.
+    for (double i = self->from; i > self->to; i--) {
+      VarBufferWrite(&list->elements, vm, VAR_NUM(i));
+    }
+    vmPopTempRef(vm); // list.
 
-  return newList(vm, 0);
+    return list;
+  }
 }
 
 String* stringLower(VM* vm, String* self) {

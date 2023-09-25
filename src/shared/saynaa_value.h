@@ -710,8 +710,6 @@ void markVarBuffer(VM* vm, VarBuffer* self);
 void popMarkedObjects(VM* vm);
 
 // Returns a number list from the range. starts with range.from and ends with
-// (range.to - 1) increase by 1. Note that if the range is reversed
-// (ie. range.from > range.to) It'll return an empty list ([]).
 List* rangeAsList(VM* vm, Range* self);
 
 // Returns a lower case version of the given string. If the string is
