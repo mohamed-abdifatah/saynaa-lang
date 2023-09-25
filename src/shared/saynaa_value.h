@@ -712,6 +712,9 @@ void popMarkedObjects(VM* vm);
 // Returns a number list from the range. starts with range.from and ends with
 List* rangeAsList(VM* vm, Range* self);
 
+// Returns a length of list
+double rangeLength(VM* vm, Range* self);
+
 // Returns a lower case version of the given string. If the string is
 // already lower it'll return the same string.
 String* stringLower(VM* vm, String* self);

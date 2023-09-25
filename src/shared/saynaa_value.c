@@ -602,6 +602,22 @@ List* rangeAsList(VM* vm, Range* self) {
   }
 }
 
+double rangeLength(VM* vm, Range* self) {
+  double length = 0;
+
+  if (self->from < self->to) {
+    for (double i = self->from; i < self->to; i++) {
+      length++;
+    }
+  }else{
+    for (double i = self->from; i > self->to; i--) {
+      length++;
+    }
+  }
+
+  return length;
+}
+
 String* stringLower(VM* vm, String* self) {
   // If the string itself is already lower, don't allocate new string.
   uint32_t index = 0;
