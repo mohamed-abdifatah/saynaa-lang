@@ -1,4 +1,4 @@
-## time
+## time Module
 time is a builtin Module.
 
 ```ruby
