@@ -2,9 +2,8 @@
 <img src="assets/icon.png" height="90px" alt="Saynaa Programming Language" title="Saynaa Programming Language">
 </p>
 
-**Saynaa** is a powerful, dynamically typed, lightweight, embeddable programming language written in C without any external dependencies (except for stdlib).
-
-**Saynaa** This is a customizable and expandable lexical analyzer, parser, and interpreter for a simplistic.
+**Saynaa** is a interpreted object-oriented, powerful, lightweight, embeddable scripting language written in C,
+Its Simple Syntax, and standalone executable with zero external dependencies.
 
 > Comments in the C code make it easy to read and understand.
 

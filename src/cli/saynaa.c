@@ -18,17 +18,6 @@
   #pragma warning(disable:26812)
 #endif
 
-#define BegMillisec      \
-  if(millisecond) {      \
-    tstart = nanotime(); \
-  }
-
-#define EndMillisec                                        \
-  if(millisecond) {                                        \
-    tend = nanotime();                                     \
-    printf("runtime: %.4f ms\n", millitime(tstart, tend)); \
-  }
-
 #define _ARGPARSE_IMPL
 #include "argparse.h"
 #undef _ARGPARSE_IMPL
@@ -150,9 +139,7 @@ int main(int argc, const char** argv) {
   VM* vm = intializeVM(argc, argv);
 
   if (cmd != NULL) { // -c "print('foo')"
-    BegMillisec;
     Result result = RunString(vm, cmd);
-    EndMillisec;
     exitcode = (int) result;
 
   } else if (arg_parse == 0) { // Run on REPL mode.
@@ -166,11 +153,12 @@ int main(int argc, const char** argv) {
   } else { // file. ...
 
     const char* file_path = argv[0];
-    BegMillisec;
     Result result = RunFile(vm, file_path);
-    EndMillisec;
     exitcode = (int) result;
   }
+
+  if(millisecond)
+    printf("runtime: %.4f ms\n", vm_time(vm));
 
   // Cleanup the VM and exit.
   FreeVM(vm);

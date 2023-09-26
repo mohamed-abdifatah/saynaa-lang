@@ -344,6 +344,9 @@ PUBLIC Result RunString(VM* vm, const char* source);
 // Run the file at [path] relative to the current working directory.
 PUBLIC Result RunFile(VM* vm, const char* path);
 
+// time vm taked.
+PUBLIC double vm_time(VM* vm);
+
 // FIXME:
 // Currently exit function will terminate the process which should exit from
 // the function and return to the caller.
