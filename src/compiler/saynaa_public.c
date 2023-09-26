@@ -136,6 +136,7 @@ VM* NewVM(Configuration* config) {
   vm->search_paths = newList(vm, 8);
 
   vm->builtins_count = 0;
+  vm->time = 0;
 
   // This is necessary to prevent garbage collection skip the entry in this
   // array while we're building it.
@@ -333,6 +334,10 @@ void releaseHandle(VM* vm, Handle* handle) {
   DEALLOCATE(vm, handle, Handle);
 }
 
+double vm_time(VM* vm) {
+  return vm->time;
+}
+
 Result RunString(VM* vm, const char* source) {
 
   Result result = RESULT_SUCCESS;
@@ -353,7 +358,11 @@ Result RunString(VM* vm, const char* source) {
     vmPushTempRef(vm, &fiber->_super); // fiber.
     vmPrepareFiber(vm, fiber, 0, NULL);
     vmPopTempRef(vm); // fiber.
+
+    nanotime_t tstart = nanotime();
     result = vmRunFiber(vm, fiber);
+    nanotime_t tend = nanotime();
+    vm->time = millitime(tstart, tend);
   }
   vmPopTempRef(vm); // module.
 
@@ -430,7 +439,13 @@ Result RunFile(VM* vm, const char* path) {
   vmPushTempRef(vm, &fiber->_super); // fiber.
   vmPrepareFiber(vm, fiber, 0, NULL);
   vmPopTempRef(vm); // fiber.
-  return vmRunFiber(vm, fiber);
+
+  nanotime_t tstart = nanotime();
+  result = vmRunFiber(vm, fiber);
+  nanotime_t tend = nanotime();
+  vm->time = millitime(tstart, tend);
+
+  return result;
 }
 
 // FIXME: this should be moved to somewhere general.

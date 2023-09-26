@@ -80,6 +80,9 @@ struct VM {
   // VM's configurations.
   Configuration config;
 
+  // time vm taked.
+  double time;
+
   // Current compiler reference to mark it's heap allocated objects. Note that
   // The compiler isn't heap allocated. It'll be a link list of all the
   // compiler we have so far. A new compiler will be created and appended when
