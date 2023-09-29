@@ -1498,6 +1498,38 @@ function(_mapClear,
   mapClear(vm, this);
 }
 
+function(_listResize,
+  "List.resize(length:Number) -> List",
+  "Resize a list to length and return the List.") {
+
+  ASSERT(IS_OBJ_TYPE(THIS, OBJ_LIST), OOPS);
+  List* thiz = (List*)AS_OBJ(THIS);
+
+  int64_t len;
+  if (!validateInteger(vm, ARG(1), &len, "Argument 1")) return;
+
+  if (len < 0) { // negative value to reduce the size.
+    len = thiz->elements.count + len;
+  }
+  if (len < 0) {
+    RET_ERR(newString(vm, "List.resize index out of bounds."));
+  }
+
+  if (len == 0) {
+    listClear(vm, thiz);
+
+  } else if (len > thiz->elements.count) {
+    VarBufferFill(&thiz->elements, vm, VAR_NULL,
+      len-thiz->elements.count);
+
+  } else if (len < thiz->elements.count) {
+    thiz->elements.count = len;
+    listShrink(vm, thiz);
+  }
+
+  RET(THIS);
+}
+
 function(_mapGet,
   "Map.get(key:Var, default=Null) -> Var",
   "Returns the key if its in the map, otherwise the default value will "
@@ -1721,6 +1753,7 @@ static void initializePrimitiveClasses(VM* vm) {
   ADD_METHOD(vLIST,   "pop",    _listPop,            -1);
   ADD_METHOD(vLIST,   "insert", _listInsert,          2);
   ADD_METHOD(vLIST,   "join",   _listJoin,           -1);
+  ADD_METHOD(vLIST, "resize", _listResize,          1);
 
   ADD_METHOD(vMAP,    "clear",  _mapClear,            0);
   ADD_METHOD(vMAP,    "get",    _mapGet,             -1);
@@ -2815,10 +2848,15 @@ void varsetSubscript(VM* vm, Var on, Var key, Var value) {
 
       // Normalize index.
       if (index < 0) index = elems->count + index;
-      if (index >= elems->count || index < 0) {
+      if (index < 0) {
         VM_SET_ERROR(vm, newString(vm, "List index out of bound."));
         return;
       }
+
+      if (index >= elems->count) {
+        VarBufferFill(elems, vm, VAR_NULL, (index + 1) - elems->count);
+      }
+
       elems->data[index] = value;
       return;
     } break;

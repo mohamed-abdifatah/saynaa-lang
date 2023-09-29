@@ -773,6 +773,9 @@ String* replaceSubstring(VM* vm, uint32_t index,
 // elements.
 void listInsert(VM* vm, List* this, uint32_t index, Var value);
 
+// Shrink the size if it's too much excess.
+void listShrink(VM* vm, List* thiz);
+
 // Remove and return element at [index].
 Var listRemoveAt(VM* vm, List* this, uint32_t index);
 

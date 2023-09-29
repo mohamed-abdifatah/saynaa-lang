@@ -21,16 +21,16 @@ class Vector
 end
 
 if _name == "@main"
-  // initialize a new vector object
+  # initialize a new vector object
   v1 = Vector(1, 2);
 
-  // initialize a new vector object
+  # initialize a new vector object
   v2 = Vector(3, 4);
 
-  // add two vector
+  # add two vector
   v3 = v1 + v2
 
-  // print v3, result is "<4, 6>"
+  # print v3, result is "<4, 6>"
   print(str(v3))
 end
 ```

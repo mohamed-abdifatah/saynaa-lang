@@ -963,6 +963,15 @@ void listInsert(VM* vm, List* this, uint32_t index, Var value) {
   this->elements.data[index] = value;
 }
 
+void listShrink(VM* vm, List* thiz) {
+  if (thiz->elements.capacity / GROW_FACTOR >= thiz->elements.count) {
+    thiz->elements.data = (Var*) vmRealloc(vm, thiz->elements.data,
+      sizeof(Var) * thiz->elements.capacity,
+      sizeof(Var) * thiz->elements.capacity / GROW_FACTOR);
+    thiz->elements.capacity /= GROW_FACTOR;
+  }
+}
+
 Var listRemoveAt(VM* vm, List* this, uint32_t index) {
   ASSERT_INDEX(index, this->elements.count);
 
@@ -974,13 +983,7 @@ Var listRemoveAt(VM* vm, List* this, uint32_t index) {
     this->elements.data[i] = this->elements.data[i + 1];
   }
 
-  // Shrink the size if it's too much excess.
-  if (this->elements.capacity / GROW_FACTOR >= this->elements.count) {
-    this->elements.data = (Var*) vmRealloc(vm, this->elements.data,
-      sizeof(Var) * this->elements.capacity,
-      sizeof(Var) * this->elements.capacity / GROW_FACTOR);
-    this->elements.capacity /= GROW_FACTOR;
-  }
+  listShrink(vm, this);
 
   if (IS_OBJ(removed)) vmPopTempRef(vm);
 

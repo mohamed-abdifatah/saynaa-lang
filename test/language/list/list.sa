@@ -34,3 +34,14 @@ l3 = l4 + l3 + l4; assert(l3 == [1,1,2,3,1,1,1,2,3])
 l1 = [1];l2 = l1;l1 += [2]
 assert(l2[1] == 2)
 assert(l1 == l2)
+
+## A List instance can be expanded by setting an index that is greater than the current size of the list:
+l4 = []
+l4[4] = 10
+assert(l4 == [null, null, null, null, 10])
+
+## list resize
+l5 = [5, 20]
+l5.resize(5); assert(l5 = [5, 20, null, null, null])
+l5.resize(-1); assert(l5 = [5, 20, null, null])
+l5.resize(1); assert(l5 = [5])
