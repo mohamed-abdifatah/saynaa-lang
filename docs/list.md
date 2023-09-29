@@ -49,6 +49,13 @@ The List class implements the join method as a convenient way to interpret a lis
   list.join(" + "); # Becomes: "1 + 2 + 3 + 4 + 5"
 ```
 
+### Adding items
+A List instance can be expanded by setting an index that is greater than the current size of the list:
+```ruby
+  list = [10,20,30,40,50];
+  list[30] = 22; # list contains now 31 elements (index 0 to 30)
+```
+
 ### List Sort
 The List class implements the sort method as a convenient way to sort its items. By default, the sort() method sorts the values as strings (or numbers) in alphabetical (for strings) and ascending order:
       
