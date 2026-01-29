@@ -2,6 +2,7 @@
 :: Distributed Under The MIT License
 
 @echo off
+setlocal
 Pushd %cd%
 cd %~dp0
 
@@ -11,7 +12,7 @@ set project_root=%~dp0
 :: ----------------------------------------------------------------------------
 :: DEPENDENCIES
 :: ----------------------------------------------------------------------------
-:: Adjust these paths to where PCRE2 is located on your machine or CI environment.
+:: These must exist for the regex module to compile on Windows.
 set pcre2_path=%project_root%deps\pcre2
 set pcre2_inc=/I"%pcre2_path%\include"
 set pcre2_lib="%pcre2_path%\lib\pcre2-8-static.lib"
@@ -59,7 +60,6 @@ goto :START
 :MSVC_INIT
 echo Not running on an MSVC prompt, searching for one...
 
-:: Find vswhere
 if exist "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" (
     set VSWHERE_PATH="%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
 ) else (
@@ -71,7 +71,6 @@ if exist "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" (
     )
 )
 
-:: Get the VC installation path
 "%VSWHERE_PATH%" -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -latest -property installationPath > _path_temp.txt
 set /p VSWHERE_PATH= < _path_temp.txt
 del _path_temp.txt
@@ -82,7 +81,6 @@ if not exist "%VSWHERE_PATH%" (
 
 echo Found at - %VSWHERE_PATH%
 
-:: Initialize VC for X86_64
 call "%VSWHERE_PATH%\VC\Auxiliary\Build\vcvars64.bat"
 if errorlevel 1 goto :NO_VS_PROMPT
 echo Initialized MSVC x86_64
@@ -97,20 +95,16 @@ goto :END
 :: ----------------------------------------------------------------------------
 :START
 
-set target_dir=
+set target_dir=%project_root%obj\
 set additional_cflags=-W3 -GR /FS -EHsc
 set additional_linkflags=/SUBSYSTEM:CONSOLE
-:: Added /DPCRE2_STATIC so the headers know we aren't using a DLL
 set additional_defines=/D_CRT_SECURE_NO_WARNINGS /DPCRE2_STATIC
 
-:: Relative root directory from a single intermediate directory.
 if "%enable_debug%"=="false" (
-    set cflags=%cflags% -O2 -MD /DNDEBUG
-    set target_dir=%project_root%obj\
+    set additional_cflags=%additional_cflags% -O2 -MD /DNDEBUG
 ) else (
-    set cflags=%cflags% -MDd -ZI
+    set additional_cflags=%additional_cflags% -MDd -ZI
     set additional_defines=%additional_defines% /DDEBUG
-    set target_dir=%project_root%obj\
 )
 
 if "%use_shared_lib%"=="true" (
@@ -130,7 +124,7 @@ if not exist "%target_dir%cli\" mkdir "%target_dir%cli\"
 
 cd "%target_dir%saynaa"
 
-:: Added %pcre2_inc% here to find regex headers
+:: Compile Core modules
 cl /nologo /c %additional_defines% %pcre2_inc% %additional_cflags% ^
     %project_root%src\compiler\*.c ^
     %project_root%src\optionals\*.c ^
@@ -140,7 +134,6 @@ cl /nologo /c %additional_defines% %pcre2_inc% %additional_cflags% ^
 
 if errorlevel 1 goto :FAIL
 
-:: If compiling a shared lib, jump past the lib/cli binaries.
 if "%use_shared_lib%"=="true" (
   set mylib=%target_dir%bin\saynaa.lib
 ) else (
@@ -149,12 +142,11 @@ if "%use_shared_lib%"=="true" (
 
 if "%use_shared_lib%"=="true" goto :SHARED
 
-:: Static Library
+:: Static Library creation
 lib /nologo %additional_linkflags% /OUT:"%mylib%" *.obj
 goto :SRC_END
 
 :SHARED
-:: Link PCRE2 into the DLL if using shared mode
 if not exist "%target_dir%bin\" mkdir "%target_dir%bin\"
 link /nologo /dll /out:"%target_dir%bin\saynaa.dll" /implib:"%mylib%" *.obj %pcre2_lib%
 
@@ -171,8 +163,8 @@ if errorlevel 1 goto :FAIL
 
 cd "%project_root%"
 
-:: Compile and Link the final cli executable.
-:: Added %pcre2_lib% here to resolve regex symbols
+:: Final Link: Build saynaa.exe in the root project folder
+:: This is where test.py expects it.
 cl /nologo %additional_defines% %target_dir%cli\*.obj "%mylib%" %pcre2_lib% /Fe"%project_root%saynaa.exe"
 if errorlevel 1 goto :FAIL
 
@@ -180,19 +172,22 @@ goto :SUCCESS
 
 :CLEAN
 if exist "%project_root%obj" rmdir /S /Q "%project_root%obj"
+if exist "%project_root%saynaa.exe" del "%project_root%saynaa.exe"
+if exist "%project_root%saynaa.ilk" del "%project_root%saynaa.ilk"
+if exist "%project_root%saynaa.pdb" del "%project_root%saynaa.pdb"
 echo.
 echo Files were cleaned.
 goto :END
 
 :SUCCESS
 echo.
-echo Compilation Success
+echo Compilation Success: saynaa.exe is ready.
 goto :END
 
 :FAIL
 popd
 endlocal
-echo Build failed. See the error messages.
+echo Build failed. Check the error messages above.
 exit /b 1
 
 :END
