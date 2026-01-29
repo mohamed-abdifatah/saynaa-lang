@@ -37,20 +37,34 @@ jobs:
           # 1. Install the static library
           vcpkg install pcre2:x64-windows-static
           
-          # 2. Create the deps folder structure
-          New-Item -ItemType Directory -Force -Path deps/pcre2/include
-          New-Item -ItemType Directory -Force -Path deps/pcre2/lib
+          # 2. Ensure the deps folders exist
+          $includeDir = "deps/pcre2/include"
+          $libDir = "deps/pcre2/lib"
+          if (!(Test-Path $includeDir)) { New-Item -ItemType Directory -Force -Path $includeDir }
+          if (!(Test-Path $libDir)) { New-Item -ItemType Directory -Force -Path $libDir }
           
-          # 3. Copy files using PowerShell (safer with Windows paths)
-          $vcpkgRoot = $env:VCPKG_INSTALLATION_ROOT
-          Copy-Item "$vcpkgRoot/installed/x64-windows-static/include/pcre2*" -Destination "deps/pcre2/include/"
-          Copy-Item "$vcpkgRoot/installed/x64-windows-static/lib/pcre2-8-static.lib" -Destination "deps/pcre2/lib/"
+          # 3. Locate vcpkg installation root (handling path mismatches)
+          $vcpkgRoot = "C:/vcpkg"
+          if (!(Test-Path $vcpkgRoot)) { $vcpkgRoot = $env:VCPKG_INSTALLATION_ROOT }
+
+          # 4. Copy Headers
+          Copy-Item "$vcpkgRoot/installed/x64-windows-static/include/pcre2*" -Destination "$includeDir/" -Force
+          
+          # 5. Copy Lib (using wildcard to find pcre2-8.lib or pcre2-8-static.lib)
+          $sourceLib = Get-ChildItem -Path "$vcpkgRoot/installed/x64-windows-static/lib/pcre2-8*.lib" | Select-Object -First 1
+          if ($sourceLib) {
+              Copy-Item $sourceLib.FullName -Destination "$libDir/pcre2-8-static.lib" -Force
+              Write-Host "Successfully copied $($sourceLib.Name) to pcre2-8-static.lib"
+          } else {
+              Write-Error "Could not find PCRE2 library in $vcpkgRoot"
+              exit 1
+          }
         shell: pwsh
 
-      - name: Run build batch script.
+      - name: Run build batch script
         run: cmd /c build.bat
 
-      - name: Run tests.
+      - name: Run tests
         run: python util/test.py
         
       - uses: actions/upload-artifact@v4
