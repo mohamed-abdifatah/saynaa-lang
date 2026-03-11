@@ -3,9 +3,13 @@
 # folder
 .vs/
 .vscode/
+.cache/
 obj/
 build/
 tmp/
+
+# saynaa packages
+saynaa-packages/
 
 ### C ###
 # Prerequisites
@@ -76,6 +80,7 @@ Sessionx.vim
 
 # Temporary
 .netrwhist
+/compile_commands.json
 *~
 /*.sw?
 # Auto-generated tag files

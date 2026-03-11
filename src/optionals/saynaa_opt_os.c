@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Mohamed Abdifatah. All rights reserved.
+ * Copyright (c) 2022-2026 Mohamed Abdifatah. All rights reserved.
  * Distributed Under The MIT License
  */
 
@@ -261,23 +261,19 @@ saynaa_function(_osExepath, "os.exepath() -> String",
   setSlotString(vm, 0, buff);
 }
 
-saynaa_function(_osArgc, "os.argc() -> Number", "return argc.") {
-  setSlotNumber(vm, 0, (double) vm->config.argument.argc);
-}
-
-saynaa_function(_osArgv, "os.argv() -> Number", "return argv.") {
+List* Arguments(VM* vm) {
   int argc = vm->config.argument.argc;
   const char** argv = vm->config.argument.argv;
 
-  List* list = newList(vm, argc - 1);
+  List* list = newList(vm, argc);
   vmPushTempRef(vm, &list->_super); // list.
 
-  for (int i = 0; i < argc - 1; i++) {
+  for (int i = 0; i < argc; i++) {
     listAppend(vm, list, VAR_OBJ(newString(vm, argv[i])));
   }
 
   vmPopTempRef(vm); // list.
-  RET(VAR_OBJ(list));
+  return list;
 }
 
 /*****************************************************************************/
@@ -287,10 +283,14 @@ saynaa_function(_osArgv, "os.argv() -> Number", "return argv.") {
 void registerModuleOS(VM* vm) {
   Handle* os = NewModule(vm, "os");
 
-  reserveSlots(vm, 3);
-  setSlotHandle(vm, 0, os);       // slots[0] = os
-  setSlotString(vm, 1, OS_NAME);  // slots[1] = "linux"
-  setAttribute(vm, 0, "name", 1); // os.name = "linux"
+  moduleSetGlobal(vm, ((Module*) AS_OBJ(os->value)), "name", 4,
+                  VAR_OBJ(newString(vm, OS_NAME)));
+  moduleSetGlobal(vm, ((Module*) AS_OBJ(os->value)), "platform", 8,
+                  VAR_OBJ(newString(vm, OS_NAME)));
+
+  moduleSetGlobal(vm, ((Module*) AS_OBJ(os->value)), "argv", 4, VAR_OBJ(Arguments(vm)));
+  moduleSetGlobal(vm, ((Module*) AS_OBJ(os->value)), "argc", 4,
+                  VAR_NUM((double) vm->config.argument.argc));
 
   REGISTER_FN(os, "getcwd", _osGetCWD, 0);
   REGISTER_FN(os, "chdir", _osChdir, 1);
@@ -306,8 +306,6 @@ void registerModuleOS(VM* vm) {
 #endif
   REGISTER_FN(os, "getenv", _osGetenv, 1);
   REGISTER_FN(os, "exepath", _osExepath, 0);
-  REGISTER_FN(os, "argc", _osArgc, 0);
-  REGISTER_FN(os, "argv", _osArgv, 0);
 
   registerModule(vm, os);
   releaseHandle(vm, os);

@@ -1,4 +1,4 @@
-:: Copyright (c) 2022-2023 Mohamed Abdifatah. All rights reserved.
+:: Copyright (c) 2022-2026 Mohamed Abdifatah. All rights reserved.
 :: Distributed Under The MIT License
 
 @echo off
@@ -76,12 +76,23 @@ if not exist "!target_dir!lib\" mkdir "!target_dir!lib\"
 
 :: 1. Compile Core
 cd /d "!target_dir!saynaa"
-cl /nologo /c !add_defines! !pcre2_inc! !add_cflags! !cflags! ^
-    "!project_root!src\compiler\*.c" ^
-    "!project_root!src\optionals\*.c" ^
-    "!project_root!src\runtime\*.c" ^
-    "!project_root!src\shared\*.c" ^
-    "!project_root!src\utils\*.c"
+
+set "sources="
+for /r "%project_root%src" %%d in (.) do (
+    set "dir_path=%%~fd"
+    if exist "!dir_path!\*.c" (
+        if /i not "!dir_path!"=="%project_root%src\cli" (
+            set "sources=!sources! "!dir_path!\*.c""
+        )
+    )
+)
+
+if "!sources!"=="" (
+    echo Error: No source files found in src.
+    goto :FAIL
+)
+
+cl /nologo /c !add_defines! !pcre2_inc! !add_cflags! !cflags! !sources!
 if errorlevel 1 goto :FAIL
 
 :: 2. Create Library

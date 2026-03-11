@@ -1,0 +1,12 @@
+
+import module
+module.path.append("./")
+
+# In case running from root
+module.path.append("./test/example/native2/")
+
+import mylib2
+
+print("Testing native2 extension...")
+mylib2.greet("Saynaa User")
+

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Mohamed Abdifatah. All rights reserved.
+ * Copyright (c) 2022-2026 Mohamed Abdifatah. All rights reserved.
  * Distributed Under The MIT License
  */
 
@@ -108,7 +108,9 @@ void reportCompileTimeError(VM* vm, const char* path, int line, const char* sour
 
         // Print line till error.
         buff.count = 0;
-        ByteBufferAddString(&buff, vm, line_start, (uint32_t) (at - line_start));
+        if (at >= line_start) {
+          ByteBufferAddString(&buff, vm, line_start, (uint32_t) (at - line_start));
+        }
         ByteBufferWrite(&buff, vm, '\0');
         writefn(vm, (char*) buff.data);
 

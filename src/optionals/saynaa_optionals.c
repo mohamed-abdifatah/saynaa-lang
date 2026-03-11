@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Mohamed Abdifatah. All rights reserved.
+ * Copyright (c) 2022-2026 Mohamed Abdifatah. All rights reserved.
  * Distributed Under The MIT License
  */
 
@@ -15,7 +15,6 @@ void registerModuleOS(VM* vm);
 void registerModuleJson(VM* vm);
 void registerModuleDummy(VM* vm);
 void registerModuleTerm(VM* vm);
-void registerModuleAlgorithm(VM* vm);
 void registerModuleRegex(VM* vm);
 
 void cleanupModuleTerm(VM* vm);
@@ -30,7 +29,6 @@ void registerLibs(VM* vm) {
   registerModuleOS(vm);
   registerModuleJson(vm);
   registerModuleDummy(vm);
-  registerModuleAlgorithm(vm);
   registerModuleTerm(vm);
   registerModuleRegex(vm);
 }

@@ -1,7 +1,8 @@
 /*
- *  Copyright (c) 2022-2023 Mohamed Abdifatah. All rights reserved.
- *  Distributed Under The MIT License
+ * Copyright (c) 2022-2026 Mohamed Abdifatah. All rights reserved.
+ * Distributed Under The MIT License
  */
+
 // !! THIS FILE IS GENERATED DO NOT EDIT !!
 
 #pragma once
@@ -228,5 +229,4 @@ NativeApi MakeNativeAPI() {
 
   return api;
 }
-
 #endif // DL_IMPLEMENT
